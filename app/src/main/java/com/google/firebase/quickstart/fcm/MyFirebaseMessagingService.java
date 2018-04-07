@@ -77,6 +77,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Log.d(TAG, " after startActivity");
         }
 
+        //ter 20180407 хорошо бы ответить отправителю, что старт/стоп прошёл
+
         // Also if you intend on generating your own notifications as a result of a received FCM
         // message, here is where that should be initiated. See sendNotification method below.
     }
