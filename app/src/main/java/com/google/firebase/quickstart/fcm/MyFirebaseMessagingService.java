@@ -69,6 +69,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         }
         Log.d(TAG, " before getPackageManager().getLaunchIntentForPackage ");
         Intent launchIntent = getPackageManager().getLaunchIntentForPackage("com.diter.motiondetection");
+        launchIntent.putExtra("Hii",remoteMessage.getData().toString());
         Log.d(TAG, " before test launchIntent "  + launchIntent.toString());
         if (launchIntent != null) {
             Log.d(TAG, " before startActivity ");
