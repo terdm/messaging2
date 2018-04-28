@@ -25,11 +25,13 @@ import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -68,11 +70,32 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         // TODO(developer): Handle FCM messages here.
         // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
-        Log.d(TAG, "From: " + remoteMessage.getFrom());
+        Log.d(TAG, "remoteMessage.getFrom: " + remoteMessage.getFrom());
+        String token = FirebaseInstanceId.getInstance().getToken();
+
+        params[1] = token;
+        Log.d(TAG, " params[1] token: " + params[1]);
 
         // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
             Log.d(TAG, "Message data payload: " + remoteMessage.getData());
+
+            try {
+
+                //JSONObject json= (JSONObject) new JSONTokener(remoteMessage.getData().toString()).nextValue();
+                //JSONObject json2 = json.getJSONObject("results");
+                //params[2] = (String) json2.get("From");
+
+                JSONObject json = new JSONObject(remoteMessage.getData());    // create JSON obj from string
+                //JSONObject json2 = json.getJSONObject("From");
+                //params[2] = json.toString();
+                params[2] = json.getString("From");
+                Log.d(TAG, "From " + params[2]);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+                Log.d(TAG, "json error " + e.toString());
+            }
         }
 
         // Check if message contains a notification payload.
@@ -97,6 +120,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             httpURLConnection.setDoOutput(true);
             httpURLConnection.setRequestMethod("POST"); // here you are telling that it is a POST request, which can be changed into "PUT", "GET", "DELETE" etc.
             httpURLConnection.setRequestProperty("Content-Type", "application/json"); // here you are setting the `Content-Type` for the data you are sending which is `application/json`
+            //httpURLConnection.setRequestProperty("Authorization","key=AAAAZAyzAtg:APA91bFg-Mb80iXj2bsat4eDcuq6LAsaxHLAazZbdwXYL2JMjWAu3eBVH82fj635EjEB4gYqCHl4s2HuOp1l24zddDK2Q-nr-Ulvy9JGxG1WpLrdhrdhkiesWu92d8VmI_Kr0VCZyTH1");
             httpURLConnection.setRequestProperty("Authorization","key=AAAAZAyzAtg:APA91bFg-Mb80iXj2bsat4eDcuq6LAsaxHLAazZbdwXYL2JMjWAu3eBVH82fj635EjEB4gYqCHl4s2HuOp1l24zddDK2Q-nr-Ulvy9JGxG1WpLrdhrdhkiesWu92d8VmI_Kr0VCZyTH1");
             httpURLConnection.connect();
 
