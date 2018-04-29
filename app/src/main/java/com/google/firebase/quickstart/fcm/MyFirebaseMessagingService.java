@@ -121,7 +121,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             httpURLConnection.setRequestMethod("POST"); // here you are telling that it is a POST request, which can be changed into "PUT", "GET", "DELETE" etc.
             httpURLConnection.setRequestProperty("Content-Type", "application/json"); // here you are setting the `Content-Type` for the data you are sending which is `application/json`
             //httpURLConnection.setRequestProperty("Authorization","key=AAAAZAyzAtg:APA91bFg-Mb80iXj2bsat4eDcuq6LAsaxHLAazZbdwXYL2JMjWAu3eBVH82fj635EjEB4gYqCHl4s2HuOp1l24zddDK2Q-nr-Ulvy9JGxG1WpLrdhrdhkiesWu92d8VmI_Kr0VCZyTH1");
-            httpURLConnection.setRequestProperty("Authorization","key=AAAAZAyzAtg:APA91bFg-Mb80iXj2bsat4eDcuq6LAsaxHLAazZbdwXYL2JMjWAu3eBVH82fj635EjEB4gYqCHl4s2HuOp1l24zddDK2Q-nr-Ulvy9JGxG1WpLrdhrdhkiesWu92d8VmI_Kr0VCZyTH1");
+            httpURLConnection.setRequestProperty("Authorization","key=AAAAOsS_sbs:APA91bHv1HdE4id-pOTY2U6OOWcoNnCSLNJWFhtIc9bFSaTGtZ4gZWxM--WWJwJD3JKK6HcsDzfkoiSKK6I0IwaXErXAdapQnwFYxucxr6Mh6pqyEmOEA38jEwh_SQGnPFOISOob8PpN");
             httpURLConnection.connect();
 
             JSONObject jsonObject = new JSONObject();
