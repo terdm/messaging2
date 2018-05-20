@@ -18,11 +18,13 @@ package com.google.firebase.quickstart.fcm;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -72,7 +74,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
         Log.d(TAG, "remoteMessage.getFrom: " + remoteMessage.getFrom());
         String token = FirebaseInstanceId.getInstance().getToken();
-
+        String hii;
+        hii = "";
         params[1] = token;
         Log.d(TAG, " params[1] token: " + params[1]);
 
@@ -81,16 +84,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Log.d(TAG, "Message data payload: " + remoteMessage.getData());
 
             try {
-
-                //JSONObject json= (JSONObject) new JSONTokener(remoteMessage.getData().toString()).nextValue();
-                //JSONObject json2 = json.getJSONObject("results");
-                //params[2] = (String) json2.get("From");
-
                 JSONObject json = new JSONObject(remoteMessage.getData());    // create JSON obj from string
-                //JSONObject json2 = json.getJSONObject("From");
-                //params[2] = json.toString();
                 params[2] = json.getString("From");
+                hii = json.getString(("Hii"));
                 Log.d(TAG, "From " + params[2]);
+                Log.d(TAG, "hii " + hii);
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -102,16 +100,30 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         if (remoteMessage.getNotification() != null) {
             Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
         }
-        Log.d(TAG, " before getPackageManager().getLaunchIntentForPackage ");
-        Intent launchIntent = getPackageManager().getLaunchIntentForPackage("com.diter.motiondetection");
-        launchIntent.putExtra("Hii",remoteMessage.getData().toString());
-        Log.d(TAG, " before test launchIntent "  + launchIntent.toString());
-        if (launchIntent != null) {
-            Log.d(TAG, " before startActivity ");
-            startActivity(launchIntent);//null pointer check in case package name was not found
-            Log.d(TAG, " after startActivity");
-        }
 
+        switch (hii)
+        {
+            case "": Log.d(TAG, " hii is null");
+            case "Start":
+            {
+                Log.d(TAG, " before getPackageManager().getLaunchIntentForPackage ");
+                Intent launchIntent = getPackageManager().getLaunchIntentForPackage("com.diter.motiondetection");
+                launchIntent.putExtra("Hii", remoteMessage.getData().toString());
+                Log.d(TAG, " before test launchIntent " + launchIntent.toString());
+                if (launchIntent != null) {
+                    Log.d(TAG, " before startActivity ");
+                    startActivity(launchIntent);//null pointer check in case package name was not found
+                    Log.d(TAG, " after startActivity");
+                }
+                break;
+            }
+            case "Stop":
+            {
+                Log.d(TAG, " sending stop broadcast message ");
+                sendBroadcastMessage("Stop");
+                break;
+            }
+        }
         //ter 20180407 хорошо бы ответить отправителю, что старт/стоп прошёл
         try {
             Log.d("MyTag","AsyncTask   starts  ");
@@ -206,5 +218,19 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public void onDestroy() {
         // The service is no longer used and is being destroyed
         Log.d(TAG, "onDestroy MyFirebaseMessagingService");
+    }
+
+    private void sendBroadcastMessage(String message) {
+        if (message != null) {
+            Intent intent = new Intent("com.diter.motiondetection");
+            intent.setAction("com.diter.motiondetection");
+            intent.putExtra("EXTRA_MESSAGE", message);
+            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+            //intent.setComponent(
+             //       new ComponentName("com.diter.motiondetection","com.diter.motiondetection.MainActivity"));
+
+            //LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+            sendBroadcast(intent);
+        }
     }
 }
