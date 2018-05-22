@@ -103,7 +103,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         switch (hii)
         {
-            case "": Log.d(TAG, " hii is null");
+            case "":
+            {
+                Log.d(TAG, " hii is null");
+                break;
+            }
             case "Start":
             {
                 Log.d(TAG, " before getPackageManager().getLaunchIntentForPackage ");
@@ -121,6 +125,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             {
                 Log.d(TAG, " sending stop broadcast message ");
                 sendBroadcastMessage("Stop");
+                break;
+            }
+            case "Log":
+            {
+                Log.d(TAG, " sending log broadcast message ");
+                sendBroadcastMessage("Log");
                 break;
             }
         }
